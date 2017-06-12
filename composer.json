@@ -1,0 +1,24 @@
+{
+    "name": "root/ms-elasticsearch",
+    "authors": [
+        {
+            "name": "Judzhin Miles",
+            "email": "info@msbios.com"
+        }
+    ],
+    "require": {
+        "elasticsearch/elasticsearch": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "TutApp": "src/"
+        }
+    },
+    "scripts": {
+        "serve": "php -S 0.0.0.0:8080 -t public public/index.php"
+    },
+    "config": {
+        "process-timeout": 5000
+    }
+
+}
