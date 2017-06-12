@@ -11,18 +11,26 @@ $client = \Elasticsearch\ClientBuilder::create()
 
 /** @var array $params */
 $params = [
-    'index' => 'some_index',
-    'type' => 'some_type',
-    'id' => 'some_id',
+    'index' => 'some_index', // 'project_name'
+    'type' => 'some_type', // 'product, order, sale ...'
+    'id' => 'some_id', // sha???, md5, 1, 2, 3 ...
     'body' => [
         'Field 1' => 'Value 1',
         'Field 2' => 'Value 2',
         'Field 3' => 'Value 3'
+        /**
+         * Object() {
+         *     public $field => "value",
+         *     public $field => "value",
+         *     public $field => "value"
+         * }
+         */
     ]
 ];
 
 /** @var array $response */
 $response = $client->index($params); // Update or Inser if not exist
+
 /**
  * Array(
  *     [_index] => some_index
