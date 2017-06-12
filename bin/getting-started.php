@@ -11,44 +11,67 @@ $client = \Elasticsearch\ClientBuilder::create()
 
 /** @var array $params */
 $params = [
-    'index' => 'some_index', // 'project_name'
-    'type' => 'some_type', // 'product, order, sale ...'
-    'id' => 'some_id', // sha???, md5, 1, 2, 3 ...
+    'index' => 'blog', // 'project_name'
+    'type' => 'post', // 'product, order, sale ...'
+    'id' => '1', // sha???, md5, 1, 2, 3 ...
     'body' => [
-        'Field 1' => 'Value 1',
-        'Field 2' => 'Value 2',
-        'Field 3' => 'Value 3'
-        /**
-         * Object() {
-         *     public $field => "value",
-         *     public $field => "value",
-         *     public $field => "value"
-         * }
-         */
+        "title" => "Веселые котята",
+        "content" => "<p>Смешная история про котят<p>",
+        "tags" => [
+            "котята", "смешная история"
+        ],
+        "published_at" => "2014-09-12T20:44:42+00:00"
+        // ...
     ]
 ];
 
 /** @var array $response */
 $response = $client->index($params); // Update or Inser if not exist
 
-/**
- * Array(
- *     [_index] => some_index
- *     [_type] => some_type
- *     [_id] => some_id 1
- *     [_version] => 3
- *     [_shards] => Array(
- *                      [total] => 2
- *                      [successful] => 1
- *                      [failed] => 0
- *                  )
- *     [created] =>
- * )
- * <code>
- *     print_r($response);
- * </code>
- */
+// GET <server_address>/blog/_mapping?pretty fetch mapping
+// GET <server_address>/blog/post/1?pretty - fetch row by id
+// GET <server_address>/blog/post/1/_source?pretty - fetch only source
+// GET <server_address>/blog/post/1?_source=title&pretty - fetch with need fields
 
-unset ($params['body']);
-/** @var array $response */
-$response = $client->delete($params); // Delete
+/** @var array $posts */
+$posts = [
+    2 => [
+        "title" => "Веселые щенки",
+        "content" => "<p>Смешная история про щенков<p>",
+        "tags" => [
+            "щенки",
+            "смешная история"
+        ],
+        "published_at" => "2014-08-12T20:44:42+00:00"
+    ],
+    3 => [
+        "title" => "Как у меня появился котенок",
+        "content" => "<p>Душераздирающая история про бедного котенка с улицы<p>",
+        "tags" => [
+            "котята"
+        ],
+        "published_at" => "2014-07-21T20:44:42+00:00"
+    ]
+];
+
+/**
+ * @var int $key
+ * @var array $post
+ */
+foreach ($posts as $key => $post) {
+
+    /** @var array $params */
+    $params = [
+        'index' => 'blog',
+        'type' => 'post',
+        'id' => $key,
+        'body' => $post
+    ];
+    $response = $client->index($params);
+}
+
+// GET <server_address>/blog/post/_search?pretty&size=1&_source=["title", "published_at"]&sort=[{"published_at": "desc"}]
+
+// unset ($params['body']);
+// /** @var array $response */
+// $response = $client->delete($params); // Delete
